@@ -1,9 +1,10 @@
 package Diary;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Task {
+public abstract class Task {
     private String title;
     private String description;
     private TaskType taskType;
@@ -11,6 +12,7 @@ public class Task {
     private Repeatability repeatability;
     private final int id;
     private static int counter = 0;
+
 
     public Task(String title, String description, TaskType taskType,
                 LocalDateTime taskDatetime, Repeatability repeatability) {
@@ -20,6 +22,7 @@ public class Task {
         this.taskDatetime = taskDatetime;
         this.repeatability = repeatability;
         this.id = counter++;
+
     }
 
     public String getTitle() {
@@ -92,4 +95,8 @@ public class Task {
     public int hashCode() {
         return Objects.hash(title, description, taskType, taskDatetime, repeatability, id);
     }
+
+    public abstract boolean appearsIn(LocalDate localDate);
+
+    public abstract Repeatability getRepeatabilityType();
 }
