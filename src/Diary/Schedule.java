@@ -23,10 +23,24 @@ public class Schedule {
         taskMap.put(task.getId(), task);
     }
 
-    public static void removeTask(int id) {
+    public static void changeTask (int id, String title,String description) {
+        if (taskMap.containsKey(id)) {
+            Task task = taskMap.get(id);
+            taskMap.replace(id, task.setTitle(title), task.setDescription(description));
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+    public static void search (int id) {
         if (taskMap.containsKey(id)){
-            taskMap.remove(id);
         }else {
+            throw new IllegalStateException();
+        }
+    }
+    public static void removeTask (int id) {
+        if (taskMap.containsKey(id)) {
+            taskMap.remove(id);
+        } else {
             throw new IllegalStateException();
         }
     }
