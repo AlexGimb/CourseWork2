@@ -1,6 +1,4 @@
 package Diary;
-
-import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class Main {
@@ -8,8 +6,6 @@ public class Main {
     static UserInterface userInterface = new UserInterface();
 
     public static void main(String[] args) {
-
-
         userInterface.mainMenu(scanner);
 
     }

@@ -19,18 +19,25 @@ public class UserInterface {
         switch (menu) {
             case ONE_MENU:
                 printAllTask(scanner);
+                break;
             case TWO_MENU:
                 printTaskFotDate(scanner);
+                break;
             case THREE_MENU:
                 changeTask(scanner);
+                break;
             case FOUR_MENU:
                 addTusk(scanner);
+                break;
             case FAVE_MENU:
                 removeTask(scanner);
+                break;
             case SIX_MENU:
                 mainMenu(scanner);
+                break;
             case SEVEN_MENU:
                 scanner.close();
+                break;
             default:
                 throw new IllegalArgumentException("Ой что то пошло не так");
         }
@@ -271,8 +278,10 @@ public class UserInterface {
                 break;
             } catch (NumberFormatException e) {
                 System.out.println("Введен не верный номер");
+                break;
             } catch (IllegalStateException e) {
                 System.out.println("Задача не найдена");
+                break;
             }
         }
         System.out.println("Задача удалена");
