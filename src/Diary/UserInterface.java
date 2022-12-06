@@ -67,8 +67,10 @@ public class UserInterface {
         switch (menu) {
             case SIX_MENU:
                 mainMenu(scanner);
+                break;
             case SEVEN_MENU:
                 scanner.close();
+                break;
         }
     }
 
