@@ -4,9 +4,10 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class Schedule {
-    private static final Map<Integer, Task> taskMap = new HashMap<>();
+    private Map<Integer, Task> taskMap = new HashMap<>();
+    static Schedule schedule = new Schedule();
 
-    public static Collection<Task> getTuskForData(LocalDate date) {
+    public  Collection<Task> getTaskForData(LocalDate date) {
         TreeSet<Task>taskForData = new TreeSet<>(Comparator.comparing(Task::getTaskDatetime));
         for (Task task : taskMap.values()) {
             if (task.appearsIn(date)) {
@@ -16,28 +17,28 @@ public class Schedule {
         return taskForData;
     }
 
-    public static Collection<Task> allTasks() {
+    public  Collection<Task> allTasks() {
         return taskMap.values();
     }
-    public static void addTusk(Task task) {
+    public  void addTask(Task task) {
         taskMap.put(task.getId(), task);
     }
 
-    public static void changeTask (int id, String title,String description) {
-        if (taskMap.containsKey(id)) {
-            Task task = taskMap.get(id);
-            taskMap.replace(id, task.setTitle(title), task.setDescription(description));
+    public void changeTask(int id, String title, String description) {
+        if (schedule.taskMap.containsKey(id)) {
+            Task task = schedule.taskMap.get(id);
+            schedule.taskMap.replace(id, task.setTitle(title), task.setDescription(description));
         } else {
             throw new IllegalStateException();
         }
     }
-    public static void search (int id) {
+    public  void search (int id) {
         if (taskMap.containsKey(id)){
         }else {
             throw new IllegalStateException();
         }
     }
-    public static void removeTask (int id) {
+    public  void removeTask (int id) {
         if (taskMap.containsKey(id)) {
             taskMap.remove(id);
         } else {

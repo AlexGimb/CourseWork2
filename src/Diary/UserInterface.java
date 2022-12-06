@@ -11,60 +11,61 @@ import java.util.Scanner;
 import static java.lang.Integer.parseInt;
 
 public class UserInterface {
+    private  final DateTimeFormatter DATA_FORMATTED = DateTimeFormatter.ofPattern("d.MM.yyyy");
+    private  final DateTimeFormatter TIME_FORMATTED = DateTimeFormatter.ofPattern("HH:mm");
 
-    private static final DateTimeFormatter DATA_FORMATTED = DateTimeFormatter.ofPattern("d.MM.yyyy");
-    private static final DateTimeFormatter TIME_FORMATTED = DateTimeFormatter.ofPattern("HH:mm");
+    public  void mainMenu (Scanner scanner) {
+        Menu menu = readMenu(scanner);
+        switch (menu) {
+            case ONE_MENU:
+                printAllTask(scanner);
+            case TWO_MENU:
+                printTaskFotDate(scanner);
+            case THREE_MENU:
+                changeTask(scanner);
+            case FOUR_MENU:
+                addTusk(scanner);
+            case FAVE_MENU:
+                removeTask(scanner);
+            case SIX_MENU:
+                mainMenu(scanner);
+            case SEVEN_MENU:
+                scanner.close();
+            default:
+                throw new IllegalArgumentException("Ой что то пошло не так");
+        }
+    }
 
-    public static String menu(Scanner scanner) {
-        System.out.println("Добро пожаловать в планировщик задач");
+    private Menu readMenu(Scanner scanner) {
         while (true) {
             try {
-                System.out.println("Пункт меню");
+                System.out.println("Меню");
                 for (Menu menu : Menu.values()) {
                     System.out.println(menu.ordinal() + " " + localizeMenu(menu));
                 }
                 System.out.print("Выберите пункт меню: ");
                 String ordinalLine = scanner.nextLine();
                 int ordinal = parseInt(ordinalLine);
-                return Integer.toString(Menu.values()[ordinal].ordinal());
+                return Menu.values()[ordinal];
             } catch (NumberFormatException e) {
-                System.out.println("Выбран не верный номер меню");
+                System.out.println("Выбран не верный пункт меню!");
             } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("Меню не найдено");
+                System.out.println("Пункт меню не найден!");
             }
         }
     }
 
-    public static void mainMenu (Scanner scanner) {
-        int number = Integer.parseInt((menu(scanner)));
-        if (number == 0) {
-            printAllTask(scanner);
-        }if (number == 1) {
-            printTaskFotDate(scanner);
-        }if (number == 2) {
-            changeTask(scanner);
-        }if (number == 3) {
-            addTusk(scanner);
-        }if (number == 4) {
-            removeTask(scanner);
-        }if (number == 5) {
-            mainMenu(scanner);
-        }if (number == 6) {
-            scanner.close();
+    private  void menuInOut(Scanner scanner) {
+        Menu menu = backToMainMenuExitTheApp(scanner);
+        switch (menu) {
+            case SIX_MENU:
+                mainMenu(scanner);
+            case SEVEN_MENU:
+                scanner.close();
         }
     }
 
-    private static void menuInOut(Scanner scanner) {
-        int number = Integer.parseInt((inOut(scanner)));;
-        if (number == 5) {
-            mainMenu(scanner);
-        }
-        if (number == 6) {
-            scanner.close();
-        }
-    }
-
-    private static String inOut(Scanner scanner) {
+    private Menu backToMainMenuExitTheApp(Scanner scanner) {
         while (true) {
             try {
                 System.out.println("Пункт меню");
@@ -76,7 +77,7 @@ public class UserInterface {
                 System.out.print("Выберите пункт меню: ");
                 String ordinalLine = scanner.nextLine();
                 int ordinal = parseInt(ordinalLine);
-                return Integer.toString(Menu.values()[ordinal].ordinal());
+                return Menu.values()[ordinal];
             } catch (NumberFormatException e) {
                 System.out.println("Выбран не верный номер меню");
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -84,19 +85,19 @@ public class UserInterface {
             }
         }
     }
-    public static void changeTask(Scanner scanner) {
+    public void changeTask(Scanner scanner) {
         int id = parseInt(readId(scanner));
         String title = readString("Введите новое название задачи: ", scanner);
         String description = readString("Введите новое описание задачи: ", scanner);
-        Schedule.changeTask(id, title, description);
+        Schedule.schedule.changeTask(id, title, description);
         menuInOut(scanner);
     }
 
-    private static String readId(Scanner scanner) {
+    private  String readId(Scanner scanner) {
         while (true) {
             try {
                 System.out.println("Все задачи: ");
-                for (Task task : Schedule.allTasks()) {
+                for (Task task : Schedule.schedule.allTasks()) {
                     System.out.printf("[ %s ] [%s] [%s] || Время: %s || %s - %s %n",
                             task.getId(),
                             localizeTaskType(task.getTaskType()),
@@ -108,7 +109,7 @@ public class UserInterface {
                 System.out.print("Выберите номер задачи для редактирования: ");
                 String idLines = scanner.nextLine();
                 int id = parseInt(idLines);
-                Schedule.search(id);
+                Schedule.schedule.search(id);
                 return idLines;
             } catch (NumberFormatException e) {
                 System.out.println("Введен не верный номер");
@@ -118,7 +119,7 @@ public class UserInterface {
         }
     }
 
-    public static void addTusk(Scanner scanner) {
+    public  void addTusk(Scanner scanner) {
         String title = readString("Введите название задачи: ", scanner);
         String description = readString("Введите описание задачи: ", scanner);
         TaskType taskType = readType(scanner);
@@ -144,11 +145,11 @@ public class UserInterface {
             default:
             throw new IllegalArgumentException("Ой что то пошло не так");
         }
-        Schedule.addTusk(task);
+        Schedule.schedule.addTask(task);
         System.out.println("Задача <<" + title + ">> добавлена");
         menuInOut(scanner);
     }
-    private static String readString(String message, Scanner scanner) {
+    private  String readString(String message, Scanner scanner) {
         while (true) {
             System.out.print(message);
             String readString = scanner.nextLine();
@@ -160,7 +161,7 @@ public class UserInterface {
         }
     }
 
-    private static TaskType readType(Scanner scanner) {
+    private  TaskType readType(Scanner scanner) {
         while (true) {
             try {
                 System.out.println("Тип задачи:");
@@ -178,12 +179,12 @@ public class UserInterface {
             }
         }
     }
-    private static LocalDateTime readDateTime(Scanner scanner) {
+    private  LocalDateTime readDateTime(Scanner scanner) {
         LocalDate localDate = readDate(scanner);
         LocalTime localTime = readTime(scanner);
         return localDate.atTime(localTime);
     }
-    private static LocalDate readDate(Scanner scanner) {
+    private  LocalDate readDate(Scanner scanner) {
         while (true) {
             try {
                 System.out.print("Введите дату задачи: ");
@@ -194,7 +195,7 @@ public class UserInterface {
             }
         }
     }
-    private static LocalTime readTime(Scanner scanner) {
+    private  LocalTime readTime(Scanner scanner) {
         while (true) {
             try {
                 System.out.print("Введите время задачи: ");
@@ -205,7 +206,7 @@ public class UserInterface {
             }
         }
     }
-    private static Repeatability readRepeatability(Scanner scanner) {
+    private  Repeatability readRepeatability(Scanner scanner) {
         while (true) {
             try {
                 System.out.println("Тип повторяемости:");
@@ -223,9 +224,9 @@ public class UserInterface {
             }
         }
     }
-    public static void printAllTask(Scanner scanner) {
+    public  void printAllTask(Scanner scanner) {
         System.out.println("Все задачи: ");
-        for (Task task : Schedule.allTasks()) {
+        for (Task task : Schedule.schedule.allTasks()) {
             System.out.printf("[%s] [%s] || Время: %s || %s - %s %n",
                     localizeTaskType(task.getTaskType()),
                     localizeRepeatability(task.getRepeatabilityType()),
@@ -235,9 +236,9 @@ public class UserInterface {
         }
         menuInOut(scanner);
     }
-    public static void printTaskFotDate(Scanner scanner) {
+    public  void printTaskFotDate(Scanner scanner) {
         LocalDate localDate = readDate(scanner);
-        Collection<Task> taskFotDate = Schedule.getTuskForData(localDate);
+        Collection<Task> taskFotDate = Schedule.schedule.getTaskForData(localDate);
         System.out.println("Задачи на : " + localDate.format(DATA_FORMATTED));
         for (Task task : taskFotDate) {
             System.out.printf("[%s] [%s] || Время: %s || %s - %s %n",
@@ -250,9 +251,9 @@ public class UserInterface {
         }
         menuInOut(scanner);
     }
-    public static void removeTask(Scanner scanner) {
+    public  void removeTask(Scanner scanner) {
         System.out.println("Все задачи: ");
-        for (Task task : Schedule.allTasks()) {
+        for (Task task : Schedule.schedule.allTasks()) {
             System.out.printf("[ %s ] [%s] [%s] || Время: %s || %s - %s %n",
                     task.getId(),
                     localizeTaskType(task.getTaskType()),
@@ -266,7 +267,7 @@ public class UserInterface {
                 System.out.print("Выберите номер задачи для удаления: ");
                 String idLines = scanner.nextLine();
                 int id = parseInt(idLines);
-                Schedule.removeTask(id);
+                Schedule.schedule.removeTask(id);
                 break;
             } catch (NumberFormatException e) {
                 System.out.println("Введен не верный номер");
@@ -277,7 +278,7 @@ public class UserInterface {
         System.out.println("Задача удалена");
         menuInOut(scanner);
     }
-    private static String localizeTaskType(TaskType taskType) {
+    private  String localizeTaskType(TaskType taskType) {
         switch (taskType) {
             case PERSONAL:
                 return "Персональная задача";
@@ -287,7 +288,7 @@ public class UserInterface {
                 throw new IllegalArgumentException("Ой что то пошло не так");
         }
     }
-    private static String localizeRepeatability(Repeatability repeatability) {
+    private  String localizeRepeatability(Repeatability repeatability) {
         switch (repeatability) {
             case ONCE:
                 return "Однократно";
@@ -304,7 +305,7 @@ public class UserInterface {
         }
     }
 
-    private static String localizeMenu(Menu menu) {
+    private  String localizeMenu(Menu menu) {
         switch (menu) {
             case ONE_MENU:
                 return "Посмотреть список всех задач за все время";
