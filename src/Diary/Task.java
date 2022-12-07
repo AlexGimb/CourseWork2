@@ -1,10 +1,9 @@
 package Diary;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public abstract class Task {
+public abstract class Task implements TaskInterface{
     private String title;
     private String description;
     private TaskType taskType;
@@ -92,13 +91,8 @@ public abstract class Task {
                 Objects.equals(taskDatetime, task.taskDatetime) &&
                 repeatability == task.repeatability;
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(title, description, taskType, taskDatetime, repeatability, id);
     }
-
-    public abstract boolean appearsIn(LocalDate localDate);
-
-    public abstract Repeatability getRepeatabilityType();
 }
