@@ -5,6 +5,6 @@ public enum Repeatability {
     DAILY,
     WEEKLY,
     MONTHLY,
-    YEARLY,
+    YEARLY
 
 }
