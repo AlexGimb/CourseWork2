@@ -1,5 +1,6 @@
 package Diary;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -94,5 +95,14 @@ public abstract class Task implements TaskInterface{
     @Override
     public int hashCode() {
         return Objects.hash(title, description, taskType, taskDatetime, repeatability, id);
+    }
+
+    @Override
+    public boolean appearsIn(LocalDate localDate) {
+        return appearsIn(localDate);
+    }
+    @Override
+    public Repeatability getRepeatabilityType() {
+        return repeatability;
     }
 }
